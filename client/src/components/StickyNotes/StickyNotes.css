@@ -1,0 +1,71 @@
+.sticky-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 50;
+}
+
+.sticky-note {
+  position: absolute;
+  width: 180px;
+  height: 160px;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  pointer-events: all;
+  cursor: grab;
+  transition: box-shadow 0.2s;
+}
+
+.sticky-note:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+.sticky-note:active {
+  cursor: grabbing;
+}
+
+.sticky-header {
+  display: flex;
+  justify-content: flex-end;
+  padding: 4px;
+}
+
+.sticky-delete {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.1);
+  color: #555;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+
+.sticky-delete:hover {
+  background: rgba(255, 0, 0, 0.3);
+  color: white;
+}
+
+.sticky-text {
+  flex: 1;
+  border: none;
+  background: transparent;
+  resize: none;
+  padding: 0 12px 12px;
+  font-size: 0.85rem;
+  font-family: inherit;
+  color: #333;
+  outline: none;
+  cursor: text;
+}
+
+.sticky-text::placeholder {
+  color: rgba(0, 0, 0, 0.3);
+}

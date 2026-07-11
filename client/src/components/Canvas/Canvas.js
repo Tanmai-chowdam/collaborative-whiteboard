@@ -1,5 +1,6 @@
-import React, { useRef, useEffect, useCallback, useState } from 'react';
+import React, { useRef, useEffect, useCallback, useState, useMemo } from 'react';
 import useStore from '../../store/useStore';
+import { throttle } from '../../utils/throttle';
 import './Canvas.css';
 
 function Canvas({ socket, emitStrokeStart, emitStrokeDraw, emitStrokeEnd, emitCursorMove }) {
@@ -10,6 +11,12 @@ function Canvas({ socket, emitStrokeStart, emitStrokeDraw, emitStrokeEnd, emitCu
   const [cursors, setCursors] = useState({});
 
   const { tool, color, brushSize, strokes, addStroke } = useStore();
+
+  // Throttle cursor events to ~20/sec instead of 60/sec
+  const throttledCursorMove = useMemo(
+    () => throttle((data) => emitCursorMove(data), 50),
+    [emitCursorMove]
+  );
 
   // Set up canvas size
   useEffect(() => {
@@ -78,8 +85,8 @@ function Canvas({ socket, emitStrokeStart, emitStrokeDraw, emitStrokeEnd, emitCu
     ctx.lineJoin = 'round';
 
     if (stroke.tool === 'eraser') {
-      ctx.globalCompositeOperation = 'destination-out';
-      ctx.strokeStyle = 'rgba(0,0,0,1)';
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.strokeStyle = '#FFFFFF';
     } else {
       ctx.globalCompositeOperation = 'source-over';
       ctx.strokeStyle = stroke.color;
@@ -144,8 +151,8 @@ function Canvas({ socket, emitStrokeStart, emitStrokeDraw, emitStrokeEnd, emitCu
   const handlePointerMove = (e) => {
     const coords = getCoords(e);
 
-    // Always emit cursor position
-    emitCursorMove({ x: coords.x, y: coords.y });
+    // Emit cursor position (throttled to reduce network traffic)
+    throttledCursorMove({ x: coords.x, y: coords.y });
 
     if (!isDrawing.current) return;
 

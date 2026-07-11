@@ -2,7 +2,7 @@ import React from 'react';
 import useStore from '../../store/useStore';
 import './Toolbar.css';
 
-function Toolbar({ onUndo, onClear }) {
+function Toolbar({ onUndo, onClear, onAddNote }) {
   const { tool, setTool, color, setColor, brushSize, setBrushSize, undo } = useStore();
 
   const tools = [
@@ -96,6 +96,9 @@ function Toolbar({ onUndo, onClear }) {
       <div className="toolbar-divider" />
 
       <div className="toolbar-section">
+        <button className="action-btn" onClick={onAddNote} title="Add sticky note">
+          📝
+        </button>
         <button className="action-btn" onClick={handleUndo} title="Undo">
           ↩️
         </button>
